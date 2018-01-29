@@ -1,0 +1,36 @@
+body {
+	background-color: #9ECCB3;
+}
+
+.main-container {
+	margin-top: 10vh;
+}
+
+.main-title {
+	color: #fffff1;
+	margin: 30px 0 20px 0;
+}
+
+.table-top {
+	margin-top: 10px;
+	background-color: #ffffff;
+}
+
+.table-bottom {
+	margin: 10px 0 40px 0;
+	background-color: #ffffff;
+}
+
+.first-title {
+	margin: 20px auto;
+}
+
+.alert-register {
+	max-width: 450px;
+	margin: 0 auto;
+}
+
+.form-register {
+	max-width: 400px;
+	margin: 20px auto;
+}

@@ -1,0 +1,12 @@
+{
+	"name": "ibush.twig/netology",
+	"autors": [
+		{
+			"name": "Igor Bushenev",
+			"email": "igorbushenev@mail.ru"
+		}
+	],
+    "require": {
+		"twig/twig": "2.4.*"
+	}
+}
