@@ -1,8 +1,9 @@
 <?php
 session_start();
+error_reporting( E_ERROR );
 require_once 'vendor/autoload.php';
 $config = include 'config.php';
-$loader = new Twig_Loader_Filesystem('views/');
+$loader = new Twig_Loader_Filesystem('views');
 $twig = new Twig_Environment($loader, array(
     'cache' => false,
 ));

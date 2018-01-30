@@ -8,7 +8,7 @@
 </head>
 <body>
 	<div class="container main-container">
-		<h6 class="alert alert-info alert-register"><?php echo array_shift($errors); ?></h6>
+		<h6 class="alert alert-info alert-register">{{ errors }}</h6>
 		<form method="POST" action="?/userController/register" class="form-register">
 			<div class="form-group">
 		    	<input class="form-control" type="text" name="login" placeholder="Логин" />

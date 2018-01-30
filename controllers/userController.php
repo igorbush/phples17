@@ -3,16 +3,19 @@
 class userController 
 {
 	public $model = null;
-	public function __construct($db)
+	public $Twig;
+	public function __construct($db, $Twig)
 	{
 		include 'models/user.php';
 		$this->model = new User($db);
+		$this->twig = $Twig;
 	}
 
 	public function getForm() 
 	{
-		$errors[] = 'Введите данные для регистрации или войдите, если уже регистрировались:';
-		include 'views/user.php';
+		$errors = 'Введите данные для регистрации или войдите, если уже регистрировались:';
+		$template = $this->twig->loadTemplate('user.php');
+		echo $template->render(['errors'=>$errors ]);
 
 	}
 
@@ -28,20 +31,21 @@ class userController
 					$data = $this->model->findUser($login);
 					foreach ($data as $logins) {$login_name = $logins['login'];}
 					if ($login_name == $login) {
-						$errors[] = 'Такой пользователь уже существует в базе данных.';
+						$errors = 'Такой пользователь уже существует в базе данных.';
 					}
 					else {
 					$this->model->addUser($login, $password);
-					$errors[] = 'Теперь вы можете войти под своим логином и паролем';
+					$errors = 'Теперь вы можете войти под своим логином и паролем';
 					}
 				} else {
-					$errors[] = 'Ошибка регистрации. Введите все необхдоимые данные.';
+					$errors = 'Ошибка регистрации. Введите все необхдоимые данные.';
 				}
 			}
 		}else {
-			$errors[] = 'Введите данные для регистрации или войдите, если уже регистрировались:';
+			$errors = 'Введите данные для регистрации или войдите, если уже регистрировались:';
 		}
-		include 'views/user.php';
+		$template = $this->twig->loadTemplate('user.php');
+		echo $template->render(['errors'=>$errors]);
 		
 	}
 
@@ -61,21 +65,21 @@ class userController
 					
 					if (($login_name == $login) && ($login_pass == $password)) {
 						$_SESSION['user'] = array('user_name'=>$login_name, 'user_id'=>$login_id);
-						// include 'views/task.php';
 						header('Location: ?/taskController/getTask');
 					}
 					else {
-						$errors[] = 'Такой пользователь не существует, либо неверный пароль.';
+						$errors = 'Такой пользователь не существует, либо неверный пароль.';
 					}}
 				}
 				else {
-				$errors[] = 'Ошибка входа. Введите все необхдоимые данные.';
+				$errors = 'Ошибка входа. Введите все необхдоимые данные.';
 				}
 			}
 		}else {
-			$errors[] = 'Введите данные для регистрации или войдите, если уже регистрировались:';
+			$errors = 'Введите данные для регистрации или войдите, если уже регистрировались:';
 		}
-		include 'views/user.php';
+		$template = $this->twig->loadTemplate('user.php');
+		echo $template->render(['errors'=>$errors]);
 	}
 
 	public function logout() 

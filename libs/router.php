@@ -10,7 +10,7 @@ if (count($pathList) < 2) {
         $main->getMain();
     } else {
         include 'controllers/taskController.php';
-        $main = new taskController($db);
+        $main = new taskController($db, $twig);
         $main->getTask();
     }
 } elseif (count($pathList) >= 2) {
@@ -19,7 +19,7 @@ if (count($pathList) < 2) {
     $action = array_shift($pathList);
     if ($controller == 'taskController') {
         include 'controllers/taskController.php';
-        $tasks = new taskController($db);
+        $tasks = new taskController($db, $twig);
         if(($action == 'getTask')) {
             $tasks->getTask();
         }
@@ -43,7 +43,7 @@ if (count($pathList) < 2) {
     }
     if ($controller == 'userController') {
         include 'controllers/userController.php';
-        $user = new userController($db);
+        $user = new userController($db, $twig);
 
         if(($action == 'logout')) {
             $user->logout();

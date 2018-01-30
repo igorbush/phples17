@@ -3,19 +3,17 @@
 class taskController 
 {
 	public $model = null;
-	public function __construct($db)
+	public $Twig;
+	public function __construct($db, $Twig)
 	{
 		include 'models/task.php';
 		$this->model = new Task($db);
+		$this->twig = $Twig;
 	}
 
 	public function getTask() 
 	{
-		$users = $this->model->findAllUsers();
-		// foreach ($users as $user)
-		// {
-		// 	$vvv = $user['login'];
-		// }
+		$this->model->findAllUsers();
 		$user_id = $_SESSION['user']['user_id'];
 		$user_name = $_SESSION['user']['user_name'];
 		$sort = null;
@@ -34,7 +32,8 @@ class taskController
 			$desc_change = $result['description'];
 			$button = 'Обновить';
 		}	
-		include 'views/task.php';
+		$template = $this->twig->loadTemplate('task.php');
+		echo $template->render(['button'=>$button, 'users'=>$this->model->findAllUsers(),'author'=>$author, 'sessionName'=>$user_name, 'sessionId'=>$user_id, 'postEdit'=> $_POST['edit'], 'desc_change'=>$desc_change, 'postTaskID'=>$_POST['task_id'], 'responsible'=>$responsible]);
 
 	}
 

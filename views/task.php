@@ -12,10 +12,10 @@
 			<div class="col">
 				<form action="?/taskController/add" method="POST">
 					<div class="input-group">
-						<input type="hidden" name="id" value="<?= strip_tags($_POST['task_id']); ?>">
-						<input type="text" name="description" placeholder="описание задачи" value="<?php if (isset($_POST['edit'])) {echo $desc_change; } ?>" class="form-control">
+						<input type="hidden" name="id" value="{{ postTaskID }}">
+						<input type="text" name="description" placeholder="описание задачи" value="{%if postEdit %} {{desc_change}} {% else %}{% endif %}" class="form-control">
 						<div class="input-group-append">
-							<input type="submit" name="save" value="<?=$button; ?>" class="btn btn-info">
+							<input type="submit" name="save" value="{{button}}" class="btn btn-info">
 						</div>
 					</div>
 				</form>				
@@ -36,7 +36,7 @@
 			</div>
 		</div>
 		<div class="row">
-			<h3 class="main-title">Здравствуйте, <?= $_SESSION['user']['user_name'] ?>! Вот ваш список дел:</h3>
+			<h3 class="main-title">Здравствуйте, {{sessionName}}! Вот ваш список дел:</h3>
 			<table class="table table-bordered table-sm table-top">
 				<thead class="thead-dark">
 					<tr>
@@ -50,39 +50,40 @@
 					</tr>
 				</thead>
 				<tbody>
-					<?php foreach ($author as $row): ?>
-					<?php if($row['user_id'] == $user_id): ?>
+					{% for row in author %}
+					{% if sessionId == row.user_id %}
 					<tr>
-						<td><?= $row['description'] ?></td>
-						<td><?= $row['date_added'] ?></td>
-						<td class="font-weight-bold"><?php echo $row['is_done'] == 0 ? 'В процессе' : 'Выполнено'; ?></td>
+						<td>{{row.description}}</td>
+						<td>{{row.date_added}}</td>
+						<td class="font-weight-bold">{% if row.is_done == 0 %}В процессе{% else %}Выполнено{% endif %}</td>
 						<td>
 							<form method="POST" action="?/taskController/redakt">
-								<input type="hidden" name="task_id" value="<?= $row['task_id'] ?>">
+								<input type="hidden" name="task_id" value="{{row.task_id}}">
 								<button class="badge badge-primary" type="submit" name="edit" value="Изменить">Изменить</button>
-								<?php if ($row['assigned_user_id'] == $row['user_id']) : ?>
+								{% if row.assigned_user_id == row.user_id %}
 								<button class="badge badge-success" type="submit" name="done" value="Выполнить">Выполнить</button>
-								<?php endif; ?>
+								{% endif %}
 								<button class="badge badge-danger" type="submit" name="delete" value="Удалить">Удалить</button>
 							</form>
 						</td>
 						<td>
-							<?php
-							if ($row['assigned_user_name'] == $user_name) {
-								echo 'Вы';
-							} else {
-								echo $row['assigned_user_name'];
-							}
-							?>
+							{% if row.assigned_user_name == row.login %}
+							Вы
+							{% else %}
+							{{row.assigned_user_name}}
+							{% endif %}
 						</td>
-						<td><?= $row['login'] ?></td>
+						<td>{{row.login}}</td>
 						<td>
 							<form method="POST" action="?/taskController/changeAssigned">
 								<div class="input-group">
-									<input type="hidden" name="row_id" value="<?= $row['task_id'] ?>">
+									<input type="hidden" name="row_id" value="{{row.task_id}}">
 									<select name='assigned_user_id' class="custom-select custom-select-sm">
-										<?php foreach ($users as $user) {
-										echo "<option value=". $user['id'] . ">" .$user['login']."</option>"; } ?>
+										{% for user in users %}
+										<option value="{{ user.id }}">{{ user.login }}</option>
+										{% endfor %}
+										<!-- <?php //foreach($this->model->findAllUsers() as $user) {
+										//echo "<option value=" . $user['id'] . ">" . $user['login'] . "</option>";} ?>	 -->
 									</select>
 									<div class="input-group-append">
 										<input type='submit' name='assign' class="btn btn-info btn-sm" value='Сменить исполнителя' />
@@ -91,8 +92,8 @@
 							</form>
 						</td>
 					</tr>
-					<?php endif; ?>
-					<?php endforeach; ?>
+					{% endif %}
+					{% endfor %}
 				</tbody>
 			</table>
 			<h3 class="main-title">Также, посмотрите, что от Вас требуют другие люди:</h3>
@@ -108,25 +109,25 @@
 		            </tr>
 		        </thead>
 				<tbody>
-					<?php foreach ($responsible as $row): ?>
-					<?php if(($row['assigned_user_id'] == $user_id) && ($user_id != $row['user_id'])) : ?>
+					{% for rows in responsible %}
+					{% if rows.assigned_user_id == sessionId and sessionId != rows.user_id %}
 					<tr>
-						<td><?= $row['description'] ?></td>
-						<td><?= $row['date_added'] ?></td>
-						<td class="font-weight-bold"><?php echo $row['is_done'] == 0 ? "В процессе" : "Выполнено"; ?></td>
+						<td>{{ rows.description }}</td>
+						<td>{{ rows.date_added }}</td>
+						<td class="font-weight-bold">{% if rows.is_done==0 %}В процессе{% else %}Выполнено{% endif %}</td>
 						<td>
 							<form method="POST" action="?/taskController/redakt">
-								<input type="hidden" name="task_id" value="<?= $row['id'] ?>">
+								<input type="hidden" name="task_id" value="{{ rows.id }}">
 								<button class="badge badge-primary" type="submit" name="edit" value="Изменить">Изменить</button>
 								<button class="badge badge-success" type="submit" name="done" value="Выполнить">Выполнить</button>
 								<button class="badge badge-danger" type="submit" name="delete" value="Удалить">Удалить</button>
 							</form>
 						</td>
-						<td><?=$row['assigned_user_name'] ?></td>
-						<td><?= $row['login'] ?></td>
+						<td>{{ rows.assigned_user_name }}</td>
+						<td>{{ rows.login }}</td>
 					</tr>
-					<?php endif; ?>
-					<?php endforeach; ?>
+					{% endif %}
+					{% endfor %}
 				</tbody>
 			</table>
 			<a href="?/userController/logout" class="btn btn-secondary btn-lg">выйти</a>
