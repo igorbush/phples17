@@ -9,12 +9,13 @@ class User
 		$this->db = $db;
 	}
 
-	public function findUser() 
-	{
-		$login = $login;
-		$query = 'SELECT login FROM user';
-		$sth = $this->db->query($query);
-		return $sth;
+	public function isUser($login) 
+	{ 
+		$sth = $this->db->prepare("SELECT id FROM user WHERE login=?"); 
+		$sth->bindValue(1, $login, PDO::PARAM_STR); 
+		$sth->execute();
+		$result = $sth->fetch(PDO::FETCH_ASSOC); 
+		return $result; 
 	}
 
 	public function addUser($login, $password) 

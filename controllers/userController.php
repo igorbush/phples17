@@ -15,7 +15,7 @@ class userController
 	{
 		$errors = 'Введите данные для регистрации или войдите, если уже регистрировались:';
 		$template = $this->twig->loadTemplate('user.php');
-		echo $template->render(['errors'=>$errors ]);
+		echo $template->render(['errors'=>$errors]);
 
 	}
 
@@ -28,9 +28,7 @@ class userController
 				if (!empty($_POST['login']) && !empty($_POST['password'])) {
 					$login = strip_tags(trim($_POST['login']));
 					$password = md5(strip_tags(trim($_POST['password'])));
-					$data = $this->model->findUser($login);
-					foreach ($data as $logins) {$login_name = $logins['login'];}
-					if ($login_name == $login) {
+					if ($this->model->isUser($login)) {
 						$errors = 'Такой пользователь уже существует в базе данных.';
 					}
 					else {
@@ -45,7 +43,7 @@ class userController
 			$errors = 'Введите данные для регистрации или войдите, если уже регистрировались:';
 		}
 		$template = $this->twig->loadTemplate('user.php');
-		echo $template->render(['errors'=>$errors]);
+		echo $template->render(['errors'=>$errors, 'qwerrr'=>$this->model->isUser($login)]);
 		
 	}
 
