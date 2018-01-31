@@ -27,11 +27,14 @@ class User
 		return $sth->execute();
 	}
 	
-	public function findAll() 
+	public function findUser($login, $password) 
 	{
-		$query = 'SELECT * FROM user';
-		$sth = $this->db->query($query);
-		return $sth;
+		$sth = $this->db->prepare("SELECT id FROM user WHERE login=? and password=?"); 
+		$sth->bindValue(1, $login, PDO::PARAM_STR);
+		$sth->bindValue(2, $password, PDO::PARAM_STR); 
+		$sth->execute();
+		$result = $sth->fetch(PDO::FETCH_ASSOC); 
+		return $result; 
 	}
 
 }

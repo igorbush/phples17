@@ -77,9 +77,9 @@ class Task
 	}
 
 	public function findAllUsers() {
-		$query = "SELECT * FROM user";
-		$sth = $this->db->query($query);
-		return $sth;
+		$sth = $this->db->prepare("SELECT id, login FROM user"); 
+		$sth->execute(); 
+		return $result = $sth->fetchAll(PDO::FETCH_ASSOC);
 	}
 }
 

@@ -13,7 +13,7 @@ class taskController
 
 	public function getTask() 
 	{
-		$this->model->findAllUsers();
+		$users = $this->model->findAllUsers();
 		$user_id = $_SESSION['user']['user_id'];
 		$user_name = $_SESSION['user']['user_name'];
 		$sort = null;
@@ -33,7 +33,7 @@ class taskController
 			$button = 'Обновить';
 		}	
 		$template = $this->twig->loadTemplate('task.php');
-		echo $template->render(['button'=>$button, 'users'=>$this->model->findAllUsers(),'author'=>$author, 'sessionName'=>$user_name, 'sessionId'=>$user_id, 'postEdit'=> $_POST['edit'], 'desc_change'=>$desc_change, 'postTaskID'=>$_POST['task_id'], 'responsible'=>$responsible]);
+		echo $template->render(['button'=>$button, 'users'=>$users,'author'=>$author, 'sessionName'=>$user_name, 'sessionId'=>$user_id, 'postEdit'=> $_POST['edit'], 'desc_change'=>$desc_change, 'postTaskID'=>$_POST['task_id'], 'responsible'=>$responsible]);
 
 	}
 

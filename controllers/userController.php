@@ -56,18 +56,14 @@ class userController
 				if (!empty($_POST['login']) && !empty($_POST['password'])) {
 					$login = strip_tags(trim($_POST['login']));
 					$password = md5(strip_tags(trim($_POST['password'])));
-					foreach ($this->model->findAll() as $logins) {
-						$login_name = $logins['login'];
-						$login_pass = $logins['password'];
-						$login_id = $logins['id'];
-					
-					if (($login_name == $login) && ($login_pass == $password)) {
-						$_SESSION['user'] = array('user_name'=>$login_name, 'user_id'=>$login_id);
+					$user = $this->model->findUser($login, $password);
+					if ($this->model->findUser($login, $password)) {
+						$_SESSION['user'] = array('user_name'=>$login, 'user_id'=>$user['id']);
 						header('Location: ?/taskController/getTask');
 					}
 					else {
 						$errors = 'Такой пользователь не существует, либо неверный пароль.';
-					}}
+					}
 				}
 				else {
 				$errors = 'Ошибка входа. Введите все необхдоимые данные.';
